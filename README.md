@@ -250,3 +250,84 @@ The application is:
 - Deployable from any environment  
 
 ---
+
+#THE NEXT STEP IS TO REDUCE THE SIZE OF IMAGE THAT IS PUSHED ON DOCKERHUB BY USING MULTI STAGE DOCKER BUILD
+
+
+# 🚀 Docker Image Size Optimization
+
+## ❗ Why Was the Docker Image Large?
+
+The previous Dockerfile produced a large image because:
+
+- ❌ It kept build tools (`gcc`, `cmake`, `gtest`)
+- ❌ It kept full source code
+- ❌ It kept build artifacts
+- ❌ Ubuntu base image itself is heavy (~77MB)
+- ❌ `build-essential` adds ~300MB+
+
+👉 Final image size was approximately **500–800MB**
+
+---
+
+## 🎯 Optimization Strategy
+
+To reduce the image size, we applied:
+
+- ✅ Multi-stage build
+- ✅ Separate build & runtime environments
+- ✅ Copy only compiled binary to runtime stage
+- ✅ Use smaller runtime base image
+- ✅ Added `.dockerignore` file
+
+---
+
+## 🧠 Architecture Change
+
+### 🔴 Before (Single-Stage Dockerfile)
+
+Everything was inside one stage:
+
+- Build tools  
+- Source code  
+- Unit tests  
+- Dependencies  
+- Compiled binary  
+
+This resulted in a heavy production image.
+
+---
+
+### 🟢 After (Multi-Stage Dockerfile)
+
+We separated the build and runtime stages:
+
+| Stage     | Contains                              |
+|-----------|----------------------------------------|
+| `builder` | gcc, cmake, gtest, source code        |
+| `runtime` | Only compiled binary                  |
+
+---
+
+## 🎉 Final Runtime Image Contains
+
+- ✔ No gcc  
+- ✔ No cmake  
+- ✔ No gtest  
+- ✔ No source code  
+- ✔ Only executable  
+
+🚀 **Result: Massive image size reduction**
+
+---
+
+## 📦 Pull the Optimized Image
+
+After a successful merge into the `main` branch,  
+GitHub Actions automatically builds and pushes the optimized image to DockerHub.
+
+Pull it using:
+
+```bash
+docker pull priyanshu6376/cpp-cicd-app:latest
+
