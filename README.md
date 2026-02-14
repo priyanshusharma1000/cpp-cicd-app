@@ -1,18 +1,28 @@
- C++ CI/CD Pipeline using GitHub Actions + Docker
- Project Overview
+# 🚀 C++ CI/CD Pipeline using GitHub Actions + Docker
 
-This project demonstrates a complete CI/CD pipeline for a minimal C++ application using:
-✅ CMake
-✅ GoogleTest (Unit Testing)
-✅ GitHub Actions (CI + CD)
-✅ Docker
-✅ DockerHub (Image Registry)
-✅ GitHub Secrets (Secure Credentials)
-✅ Branch Protection Rules
+## 📌 Project Overview
 
-The goal was to simulate an industry-level workflow from code commit to Docker image deployment.
-🧱 Step 1 — Created Minimal C++ Application
-Project structure:
+This project demonstrates a complete end-to-end CI/CD pipeline for a minimal C++ application using modern DevOps practices.
+
+The goal is to simulate an industry-level workflow from code commit → automated testing → Docker image deployment.
+
+---
+
+## 🔧 Tech Stack
+
+- CMake
+- GoogleTest (Unit Testing)
+- GitHub Actions (CI + CD)
+- Docker
+- DockerHub (Image Registry)
+- GitHub Secrets (Secure Credentials)
+- Branch Protection Rules
+
+---
+
+## 🏗️ Project Structure
+
+```
 cpp-cicd-app/
 ├── src/
 ├── include/
@@ -20,161 +30,223 @@ cpp-cicd-app/
 ├── CMakeLists.txt
 ├── Dockerfile
 └── .github/workflows/
+```
 
+---
 
-Features:
-Simple add() function
-Unit tests using GoogleTest
-CMake-based build system
+## 🧱 Step 1 — Minimal C++ Application
 
-🐙 Step 2 — Push to GitHub
+### Features
+
+- Simple `add()` function
+- Unit tests using GoogleTest
+- CMake-based build system
+
+---
+
+## 🐙 Step 2 — Push to GitHub
+
+```bash
 git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
 git remote add origin https://github.com/<username>/cpp-cicd-app.git
 git push -u origin main
+```
 
+---
 
-🔀 Step 3 — Feature Branch Workflow
+## 🔀 Step 3 — Feature Branch Workflow
+
+```bash
 git checkout -b feature/test-pipeline
 git push origin feature/test-pipeline
+```
 
+Created a Pull Request → CI triggered automatically.
 
-Created Pull Request → CI triggered automatically.
+---
 
-⚙️ Step 4 — Continuous Integration (CI)
-Created:
+## ⚙️ Step 4 — Continuous Integration (CI)
+
+Workflow file:
+
+```
 .github/workflows/integration.yml
+```
 
+### Trigger
 
-Triggered on:
-pull_request → main branch
+- pull_request → main branch
 
-CI Pipeline Steps:
-Checkout code
-Install dependencies
-Build project using CMake
-Run unit tests using ctest
-If tests fail ❌ → Merge blocked
-If tests pass ✅ → PR can be merged
+### CI Pipeline Steps
 
+1. Checkout code  
+2. Install dependencies  
+3. Build project using CMake  
+4. Run unit tests using `ctest`  
 
-🔐 Step 5 — Branch Protection Rule
-GitHub → Settings → Branches → Add Rule
+### Merge Rules
 
-Protected main branch with:
-✅ Require pull request before merging
-✅ Require status checks to pass
-✅ Selected CI pipeline check
-✅ Prevent direct pushes to main
+- If tests fail → Merge blocked  
+- If tests pass → PR can be merged  
 
-Now merge allowed only if:
-✔ Build successful
-✔ Tests successful
+---
 
-Step 6 — Continuous Deployment (CD)
+## 🔐 Step 5 — Branch Protection Rules
 
-Created:
+Enabled on `main` branch:
+
+- Require pull request before merging  
+- Require status checks to pass  
+- Selected CI pipeline check  
+- Prevent direct pushes to main  
+
+Merge is allowed only if:
+
+- Build successful  
+- Tests successful  
+
+---
+
+## 🚀 Step 6 — Continuous Deployment (CD)
+
+Workflow file:
+
+```
 .github/workflows/deploy.yml
-Triggered on:
-push → main branch
+```
 
-CD Pipeline Steps:
+### Trigger
 
-Checkout code
-Login to DockerHub
-Build Docker image
-Push image to DockerHub
+- push → main branch
 
-🐳 Step 7 — DockerHub Setup
-Created DockerHub Account
-https://hub.docker.com
-Generated Access Token
-DockerHub → Account Settings → Security → Access Tokens
+### CD Pipeline Steps
 
-Created token with:
-Read & Write permissions
+1. Checkout code  
+2. Login to DockerHub  
+3. Build Docker image  
+4. Push image to DockerHub  
 
-🔑 Step 8 — GitHub Secrets
-GitHub → Repo → Settings → Secrets → Actions
-Added:
+---
 
-Secret Name	Value
-DOCKER_USERNAME	DockerHub username
-DOCKER_PASSWORD	DockerHub Access Token
+## 🐳 Step 7 — DockerHub Setup
 
-⚠ Used token instead of password (best practice)
+- Created DockerHub Account  
+- Generated Access Token (Read & Write permissions)  
 
-🐳 Step 9 — Image Naming Convention
-Image built as:
+Used access token instead of password (best practice).
+
+---
+
+## 🔑 Step 8 — GitHub Secrets
+
+Configured in:
+
+Repository → Settings → Secrets → Actions
+
+| Secret Name      | Value                     |
+|------------------|--------------------------|
+| DOCKER_USERNAME  | DockerHub username       |
+| DOCKER_PASSWORD  | DockerHub Access Token   |
+
+---
+
+## 🏷️ Step 9 — Docker Image Naming
+
+Image format:
+
+```
 <docker_username>/cpp-cicd-app:latest
+```
 
 Example:
+
+```bash
 docker build -t priyanshu123/cpp-cicd-app:latest .
-Namespace required for DockerHub push.
+```
 
-🧪 Step 10 — Verified Deployment
-Checked GitHub Actions
+Namespace is required for DockerHub push.
 
-Actions tab → CD Pipeline → All steps green ✅
+---
 
-Checked DockerHub
+## 🧪 Step 10 — Deployment Verification
 
-Repository → Tags → latest visible
+### GitHub Actions
 
-Pulled & Ran from WSL
+Actions tab → CD Pipeline → All steps green
+
+### DockerHub
+
+Repository → Tags → `latest` visible
+
+### Pull & Run
+
+```bash
 docker pull <username>/cpp-cicd-app:latest
 docker run --rm <username>/cpp-cicd-app:latest
-
+```
 
 Output:
 
+```
 2 + 3 = 5
+```
 
-🧠 Final Workflow Architecture
+---
+
+## 🧠 Final Workflow Architecture
+
+```
 Feature Branch
-     ↓
+      ↓
 Pull Request
-     ↓
+      ↓
 CI Pipeline (Build + Test)
-     ↓
+      ↓
 Merge to Main
-     ↓
+      ↓
 CD Pipeline (Docker Build + Push)
-     ↓
+      ↓
 DockerHub
-     ↓
+      ↓
 Pull & Run Anywhere
+```
 
-🏆 What This Project Demonstrates
+---
 
-Real CI/CD workflow
+## 🏆 What This Project Demonstrates
 
-Secure secret handling
+- Real CI/CD workflow
+- Secure secret handling
+- Branch protection enforcement
+- Automated Docker builds
+- Registry integration
+- Industry-standard DevOps practices
 
-Branch protection enforcement
+---
 
-Automated Docker builds
+## 💡 Key Learnings
 
-Registry integration
+- Difference between CI and CD
+- Blocking merges using status checks
+- GitHub Actions workflow automation
+- Secure DockerHub authentication using tokens
+- Automated Docker image publishing
+- Remote deployment verification
 
-Industry-standard DevOps practices
+---
 
-💡 Key Learnings
+## 🎯 Result
 
-Difference between CI and CD
+Successfully built a fully automated CI/CD pipeline for a C++ application using GitHub Actions and DockerHub.
 
-How to block merges using status checks
+The application is:
 
-How GitHub Actions works
+- Automatically tested  
+- Automatically containerized  
+- Automatically published  
+- Deployable from any environment  
 
-Why DockerHub tokens are required
-
-How to automate Docker image publishing
-
-How to verify remote deployments
-
-🎯 Result
-
-Successfully built an end-to-end automated CI/CD pipeline for a C++ application using GitHub Actions and DockerHub, fully deployable and runnable from any environment.
+---
